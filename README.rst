@@ -84,6 +84,9 @@ Options
                         read/write ACL.
   --endpoint HOST       Specify a specific S3 endpoint to connect to via
                         boto's "host" connection argument (S3 only).
+  --call-format	DefaultCallingFormat
+                        Choose CallingFormat, using vhost (default) or others
+                        CallingFormat.
   -g GRANT, --grant GRANT
                         A canned ACL policy that will be granted on each file
                         transferred to S3/GS. The value provided must be one
