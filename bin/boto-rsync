@@ -24,6 +24,7 @@
 import sys, os, time, datetime, argparse, threading, signal
 from fnmatch import fnmatch
 import boto
+import boto.s3.connection
 
 __version__ = '0.8.1'
 
@@ -200,6 +201,10 @@ def main():
              'environment variable or a credentials file.'
         )
     parser.add_argument(
+        '--call-format', metavar='DefaultCallingFormat', default='boto.s3.connection.OrdinaryCallingFormat',
+        help='Choose CallingFormat, using vhost (default) or others CallingFormat.'
+        )
+    parser.add_argument(
         '--anon', action='store_true',
         help='Connect without credentials (S3 only). Useful if working ' + \
              'with others\' buckets that have a global read/write ACL.'
@@ -313,6 +318,7 @@ def main():
         cloud_secret_access_key = args.cloud_secret_access_key
         anon = args.anon
         endpoint = args.endpoint
+        call_format = args.call_format
         grant = args.grant
         metadata = args.metadata
         if not isinstance(metadata, dict):
@@ -419,7 +425,7 @@ def main():
         else:
             c = boto.connect_s3(aws_access_key_id=cloud_access_key_id,
                                 aws_secret_access_key=cloud_secret_access_key,
-                                host=endpoint)
+                                host=endpoint,calling_format=call_format)
     c.debug = debug
     b = c.get_bucket(cloud_bucket)
     if xfer_type in ['sync']:
