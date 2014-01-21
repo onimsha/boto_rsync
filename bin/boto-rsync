@@ -201,6 +201,10 @@ def main():
              'environment variable or a credentials file.'
         )
     parser.add_argument(
+         '--exclude', action='append', default=[],
+         help='Exclude files matching the specified pattern.'
+         )
+    parser.add_argument(
         '--call-format', metavar='DefaultCallingFormat', default='boto.s3.connection.OrdinaryCallingFormat',
         help='Choose CallingFormat, using vhost (default) or others CallingFormat.'
         )
@@ -320,6 +324,7 @@ def main():
         endpoint = args.endpoint
         call_format = args.call_format
         grant = args.grant
+        exclude = args.exclude
         metadata = args.metadata
         if not isinstance(metadata, dict):
             metadata = dict([meta.split(': ', 1) for meta in metadata])
@@ -547,6 +552,22 @@ def main():
                     fullpath = os.path.join(root, file)
                     key_name = cloud_path + get_key_name(fullpath, path)
                     file_size = os.path.getsize(fullpath)
+                    # determine if the file should be excluded according to command line arguments.
+                    excludeFile = False
+                    for excludePath in exclude:
+                        if fullpath.startswith(excludePath):
+                            excludeFile = True
+                            continue
+                        elif fullpath[len(path):].lstrip(os.sep).startswith(excludePath):
+                             excludeFile = True
+                             continue
+                    if excludeFile:
+                         sys.stdout.write(
+                             'Skipping %s (excluded path)\n' %
+                             fullpath[len(path):].lstrip(os.sep)
+                         )
+                         continue
+                     
                     
                     if file_size == 0:
                         if ignore_empty:
