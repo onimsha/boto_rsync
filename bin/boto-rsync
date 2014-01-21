@@ -558,19 +558,19 @@ def main():
                         if fullpath.startswith(excludePath):
                             excludeFile = True
                             continue
-                        #default exclude .svn and .git pattern
-                        elif '.svn' in fullpath:
-                            excludeFile = True
-                            continue
-                        elif '.git' in fullpath:
-                            excludeFile = True
-                            continue
                         elif fullpath.endswith(excludePath):
                             excludeFile = True
                             continue
                         elif fullpath[len(path):].lstrip(os.sep).startswith(excludePath):
                              excludeFile = True
                              continue
+                    #default exclude .svn and .git pattern
+                    if '.svn' in fullpath:
+                            excludeFile = True
+                            continue
+                    if '.git' in fullpath:
+                            excludeFile = True
+                            continue
                     if excludeFile:
                          sys.stdout.write(
                              'Skipping %s (excluded path)\n' %
