@@ -567,10 +567,10 @@ def main():
                     #default exclude .svn and .git pattern
                     if '.svn' in fullpath:
                             excludeFile = True
-                            continue
+                            
                     if '.git' in fullpath:
                             excludeFile = True
-                            continue
+                            
                     if excludeFile:
                          sys.stdout.write(
                              'Skipping %s (excluded path)\n' %
