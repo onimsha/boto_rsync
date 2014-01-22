@@ -553,6 +553,7 @@ def main():
                     key_name = cloud_path + get_key_name(fullpath, path)
                     file_size = os.path.getsize(fullpath)
                     # determine if the file should be excluded according to command line arguments.
+                    defaultExclude = False
                     excludeFile = False
                     for excludePath in exclude:
                         if fullpath.startswith(excludePath):
@@ -566,16 +567,19 @@ def main():
                              continue
                     #default exclude .svn and .git pattern
                     if '.svn' in fullpath:
-                            excludeFile = True
+                            defaultExclude = True
                             
                     if '.git' in fullpath:
-                            excludeFile = True
+                            defaultExclude = True
                             
                     if excludeFile:
                          sys.stdout.write(
                              'Skipping %s (excluded path)\n' %
                              fullpath[len(path):].lstrip(os.sep)
                          )
+                         continue
+                     
+                    if defaultExclude:
                          continue
                      
                     
